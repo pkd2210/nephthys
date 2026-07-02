@@ -1,9 +1,6 @@
 from datetime import datetime
 from datetime import timedelta
 from datetime import timezone
-from io import BytesIO
-
-import numpy as np
 from blockkit import Image
 
 from nephthys.database.enums import TicketStatus
@@ -19,7 +16,7 @@ LAST_DAYS = 7
 
 async def generate_ticket_status_pie_image(tz: timezone | None = None) -> bytes:
     """Generates a pie chart showing percentages of open/closed/in progress
-    tickets over the last 7 days, renders it as a PNG and returns it as bytes."""
+    tickets over the last 7 days, renders it as an SVG and returns it as bytes."""
     is_daytime = is_day(tz) if tz else True
 
     if is_daytime:
@@ -59,26 +56,15 @@ async def generate_ticket_status_pie_image(tz: timezone | None = None) -> bytes:
                 del labels[count]
                 del colours[count]
 
-        b = BytesIO()
-        y = np.array(y)
-        plt = generate_pie_chart(
+        pie_chart = generate_pie_chart(
             y=y,
             labels=labels,
             colours=colours,
             text_colour=text_colour,
             bg_colour=bg_colour,
         )
-    async with perf_timer("Saving pie chart to buffer"):
-        plt.savefig(
-            b,
-            bbox_inches="tight",
-            pad_inches=0.1,
-            transparent=False,
-            dpi=300,
-            format="png",
-        )
 
-    return b.getvalue()
+    return pie_chart
 
 
 async def ticket_status_pie_chart_component(tz: timezone | None = None):
@@ -87,8 +73,8 @@ async def ticket_status_pie_chart_component(tz: timezone | None = None):
     async with perf_timer("Uploading pie chart"):
         url = await upload_file(
             file=pie_chart_image,
-            filename="ticket_status.png",
-            content_type="image/png",
+            filename="ticket_status.svg",
+            content_type="image/svg+xml",
         )
 
     if not url:
