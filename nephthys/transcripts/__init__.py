@@ -20,8 +20,10 @@ from nephthys.transcripts.transcripts.stardance import Stardance
 from nephthys.transcripts.transcripts.stardance_ambassadors import StardanceAmbassadors
 from nephthys.transcripts.transcripts.stasis import Stasis
 from nephthys.transcripts.transcripts.summer_of_making import SummerOfMaking
+from nephthys.transcripts.transcripts.treasure_hunt import TreasureHunt
 
 transcripts: List[Type[Transcript]] = [
+    TreasureHunt,
     Identity,
     SummerOfMaking,
     Flavortown,
