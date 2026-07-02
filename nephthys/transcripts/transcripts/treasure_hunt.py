@@ -1,7 +1,7 @@
 from nephthys.transcripts.transcript import Transcript
 
 
-class Beest(Transcript):
+class TreasureHunt(Transcript):
     """Transcript for Treasure Hunt"""
 
     program_name: str = "Treasure Hunt"
