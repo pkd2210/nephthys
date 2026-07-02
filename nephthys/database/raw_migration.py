@@ -8,15 +8,12 @@ class RawTable(Table):
 
 
 def postgresql_code_block(sql: str) -> str:
-    """Wraps the given SQL in a DO block, to allow multiple SQL statements
-    to be executed with one call to `RawTable.raw()`"""
-    return f"""
-    DO $nephthys_migration_block$ 
-        BEGIN
-        {sql}
-        END;
-    $nephthys_migration_block$;
+    """Return raw SQL unchanged.
+
+    Wrapping SQL in a DO/BEGIN/END block can break statements like
+    CREATE FUNCTION / dollar-quoted bodies and causes syntax errors.
     """
+    return sql.strip()
 
 
 def raw_migration(
